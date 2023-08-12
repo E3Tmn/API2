@@ -40,7 +40,7 @@ def shorten_link(token, url):
 
 
 def main():
-    secret_token = os.environ['TOKEN_BITLY']
+    secret_token = os.environ['BITLY_TOKEN']
     user_link = input("Введите ссылку: ")
     try:
         if is_bitlink(secret_token, user_link):
