@@ -4,7 +4,8 @@ from urllib.parse import urlparse
 
 
 def is_bitlink(token, url):
-    bitlink = urlparse(url).netloc + urlparse(url).path
+    url_parsed = urlparse(url)
+    bitlink = f'{url_parsed.netloc}{url_parsed.path}'
     bit_links_url = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}'
     headers = {
       "Authorization": token
@@ -13,9 +14,9 @@ def is_bitlink(token, url):
     return response.ok
 
 
-def count_clicks(token, bitlink):
-    temp = urlparse(bitlink)
-    bitlink = temp.netloc + temp.path
+def count_clicks(token, url):
+    url_parsed = urlparse(url)
+    bitlink = f'{url_parsed.netloc}{url_parsed.path}'
     bit_links_url = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary'
     headers = {
       "Authorization": token
@@ -38,27 +39,17 @@ def shorten_link(token, url):
     return response.json()['link']
 
 
-def main(token):
+def main():
+    secret_token = os.environ['TOKEN_BITLY']
     user_link = input("Введите ссылку: ")
-    is_bit = is_bitlink(token, user_link)
-    bitlink = ''
-    clicks_count = ''
-    if is_bit:
-        try:
-            clicks_count = count_clicks(token, user_link)
-        except requests.exceptions.HTTPError:
-            print("Что-то пошло не так")
-            return
-        print("Количество переходов по ссылке: ", clicks_count)
-    else:
-        try:
-            bitlink = shorten_link(token, user_link)
-        except requests.exceptions.HTTPError:
-            print("Что-то не так")
-            return
-        print('Битлинк ', bitlink)
+    try:
+        if is_bitlink(secret_token, user_link):
+            print("Количество переходов по ссылке: ", count_clicks(secret_token, user_link))
+        else:
+            print('Битлинк ', shorten_link(secret_token, user_link))
+    except requests.exceptions.HTTPError as err:
+        print(err)   
 
 
 if __name__ == '__main__':
-    secret_token = os.environ['TOKEN_BITLY']
-    main(secret_token)
+    main()
