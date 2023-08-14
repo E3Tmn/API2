@@ -4,8 +4,8 @@ from urllib.parse import urlparse
 
 
 def is_bitlink(token, url):
-    url_parsed = urlparse(url)
-    bitlink = f'{url_parsed.netloc}{url_parsed.path}'
+    parsed_url = urlparse(url)
+    bitlink = f'{parsed_url.netloc}{parsed_url.path}'
     bit_links_url = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}'
     headers = {
       "Authorization": token
@@ -15,8 +15,8 @@ def is_bitlink(token, url):
 
 
 def count_clicks(token, url):
-    url_parsed = urlparse(url)
-    bitlink = f'{url_parsed.netloc}{url_parsed.path}'
+    parsed_url = urlparse(url)
+    bitlink = f'{parsed_url.netloc}{parsed_url.path}'
     bit_links_url = f'https://api-ssl.bitly.com/v4/bitlinks/{bitlink}/clicks/summary'
     headers = {
       "Authorization": token
