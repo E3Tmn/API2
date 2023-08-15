@@ -1,6 +1,7 @@
 import requests
 import os
 from urllib.parse import urlparse
+from dotenv import load_dotenv
 
 
 def is_bitlink(token, url):
@@ -40,6 +41,7 @@ def shorten_link(token, url):
 
 
 def main():
+    load_dotenv()
     secret_token = os.environ['BITLY_TOKEN']
     user_link = input("Введите ссылку: ")
     try:
